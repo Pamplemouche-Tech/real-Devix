@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Devix</title>
+</head>
+<body>
+    <h1>Chatbot Devix</h1>
+    <div id="chat-container"></div>
+    <input type="text" id="user-input" placeholder="Posez votre question...">
+    <button id="send-button">Envoyer</button>
+
+    <script>
+        // Place the public URL from your Colab notebook here
+        const BACKEND_URL = 'https://miesha-unanatomized-impurely.ngrok-free.dev/';
+
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = text;
+            messageDiv.style.color = (sender === 'user') ? 'blue' : 'black';
+            chatContainer.appendChild(messageDiv);
+        }
+
+        async function sendMessage() {
+            const prompt = userInput.value;
+            if (!prompt) return;
+
+            addMessage("Vous: " + prompt, 'user');
+            userInput.value = '';
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addMessage("Devix: " + data.response, 'devix');
+                } else {
+                    addMessage(`Devix: Erreur - ${data.error}`, 'devix');
+                }
+            } catch (error) {
+                console.error("Erreur de communication avec le serveur:", error);
+                addMessage("Devix: Désolé, une erreur est survenue.", 'devix');
+            }
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
