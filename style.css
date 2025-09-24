@@ -1,5 +1,15 @@
 input {
-  border-radius: 10px;
-  font: Noteworty;
-  heigh: 20px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  padding: 1em;
+  box-sizing: border-box;
+  border: none;
+  border-top: 1px solid #ccc;
+  font-size: 1em;
+  background: #fff;
+  z-index: 100;
 }
+
+/* Optionnel : pour laisser un espace en bas du contenu principal */
