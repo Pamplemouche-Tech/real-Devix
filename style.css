@@ -1,16 +1,7 @@
 /* Pour que le body prenne toute la hauteur et permette un positionnement en bas */
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
 
 /* Positionner le container principal en flex colonne pour gérer l'espace */
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
+
 
 /* On pousse le Divididi vers le bas avec margin-top: auto */
 .Divididi {
@@ -21,7 +12,7 @@ body {
     align-items: center;
     gap: 10px; /* espace entre l'input et le bouton */
     padding: 16px;
-    margin-bottom:10px;
+    margin-bottom:Auto;
     background: #f5f5f5;
     box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
 }
