@@ -16,6 +16,7 @@
     bottom: 0;
     background: #f5f5f5;
     box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    width: 90%;
 }
 
 /* Styles optionnels pour rendre l’input et le bouton harmonieux */
