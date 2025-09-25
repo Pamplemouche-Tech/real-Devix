@@ -12,7 +12,7 @@
     align-items: center;
     gap: 10px; /* espace entre l'input et le bouton */
     padding: 16px;
-    margin-bottom:Auto;
+    bottom: 0;
     background: #f5f5f5;
     box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
 }
