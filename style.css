@@ -19,6 +19,9 @@
     width: 90%;
 }
 
+#chatContainer {
+    
+}
 /* Styles optionnels pour rendre l’input et le bouton harmonieux */
 #user-input {
     flex: 1 1 auto;
