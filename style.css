@@ -19,8 +19,9 @@
     width: 90%;
 }
 
-#chatContainer {
-    
+#chat-container { 
+    gap:10px;
+    margin-up:10px;
 }
 /* Styles optionnels pour rendre l’input et le bouton harmonieux */
 #user-input {
