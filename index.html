@@ -24,11 +24,17 @@
         const sendButton = document.getElementById('send-button');
 
         function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.textContent = text;
-            messageDiv.style.color = (sender === 'user') ? 'blue' : 'black';
-            chatContainer.appendChild(messageDiv);
-        }
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', sender);
+    
+    const bubble = document.createElement('span');
+    bubble.classList.add('bubble');
+    bubble.textContent = text;
+    
+    messageDiv.appendChild(bubble);
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll automatique vers le bas
+}
 
         async function sendMessage() {
             const prompt = userInput.value;
