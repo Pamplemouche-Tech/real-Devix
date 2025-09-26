@@ -2,49 +2,113 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Chatbot Devix</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Devix - Assistant de Développement</title>
+    <style>
+        /* Styles de base */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; height: 100vh; margin: 0; background-color: #f5f7fa; }
+        
+        /* Conteneur principal de la discussion */
+        #chat-container { 
+            flex-grow: 1; 
+            overflow-y: scroll; 
+            padding: 20px; 
+            background-color: white; 
+            border-bottom: 1px solid #ddd; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* Styles des bulles de message */
+        .message-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .message { 
+            padding: 10px 15px; 
+            border-radius: 20px; 
+            max-width: 75%; 
+            word-wrap: break-word; 
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Messages de l'utilisateur (à droite) */
+        .user-row {
+            justify-content: flex-end; /* Alignement à droite */
+        }
+        .user-message { 
+            background-color: #007bff; 
+            color: white; 
+            border-bottom-right-radius: 5px;
+        }
+        
+        /* Messages de Devix (à gauche) */
+        .devix-row {
+            justify-content: flex-start; /* Alignement à gauche */
+        }
+        .devix-message { 
+            background-color: #e2e2e2; 
+            color: #333; 
+            border-bottom-left-radius: 5px;
+        }
+
+        /* Conteneur d'entrée */
+        #input-container { display: flex; padding: 10px; background-color: #f8f8f8; border-top: 1px solid #ddd; }
+        #user-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 20px; padding: 10px 15px; outline: none; transition: border-color 0.3s; }
+        #user-input:focus { border-color: #007bff; }
+        #send-button { background-color: #28a745; color: white; border: none; border-radius: 20px; padding: 10px 20px; cursor: pointer; margin-left: 10px; transition: background-color 0.3s; }
+        #send-button:hover { background-color: #218838; }
+    </style>
 </head>
 <body>
-    <h1>Devix</h1>
-    <div id="chat-container">
-       
-    </div>
-   <span id="bubble">
-  </span>
-    <div class="Divididi"> 
- <input type="text" id="user-input" placeholder="Posez votre question...">
-    <button id="send-button">Envoyer</button>
-    </div>
-    <script>
-        // Place the public URL from your Colab notebook here
-        const BACKEND_URL = 'https://miesha-unanatomized-impurely.ngrok-free.dev/';
 
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="user-input" placeholder="Posez votre question de développement...">
+        <button id="send-button">Envoyer</button>
+    </div>
+
+    <script>
+        // ⚠️ METTEZ À JOUR CETTE URL AVEC CELLE DE VOTRE COLAB (ngrok) ⚠️
+        const BACKEND_URL = 'VOTRE_URL_NGROK_ICI'; 
+        
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
 
-        function addMessage(text, sender) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', sender);
-    
-    const bubble = document.createElement('span');
-    bubble.classList.add('bubble');
-    bubble.textContent = text;
-    
-    messageDiv.appendChild(bubble);
-    chatContainer.appendChild(messageDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll automatique vers le bas
-}
+        // Ajoute le message initial de Devix
+        window.onload = () => {
+            addMessage("Bonjour ! Je suis Devix. Posez-moi une question sur le code ou les frameworks. Je suis là pour vous.", 'devix');
+        };
 
+        // Fonction pour ajouter un message à l'interface (avec les bulles)
+        function addMessage(text, sender) {
+            const messageRow = document.createElement('div');
+            messageRow.classList.add('message-row');
+            messageRow.classList.add(sender === 'user' ? 'user-row' : 'devix-row');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = text;
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'devix-message');
+            
+            messageRow.appendChild(messageDiv);
+            chatContainer.appendChild(messageRow);
+            
+            // Fait défiler jusqu'au bas du conteneur
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Fonction pour envoyer le message au serveur
         async function sendMessage() {
             const prompt = userInput.value;
             if (!prompt) return;
 
-            addMessage("Vous: " + prompt, 'user');
+            addMessage(prompt, 'user');
             userInput.value = '';
 
             try {
+                // Envoyer la requête au backend Colab
                 const response = await fetch(`${BACKEND_URL}/chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -54,16 +118,17 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    addMessage("Devix: " + data.response, 'devix');
+                    addMessage(data.response, 'devix');
                 } else {
-                    addMessage(`Devix: Erreur - ${data.error}`, 'devix');
+                    addMessage(`Erreur : ${data.error}`, 'devix');
                 }
             } catch (error) {
                 console.error("Erreur de communication avec le serveur:", error);
-                addMessage("Devix: Désolé, une erreur est survenue.", 'devix');
+                addMessage("Devix est hors ligne. Assurez-vous que le notebook Colab est en cours d'exécution.", 'devix');
             }
         }
 
+        // Écouter les événements de l'utilisateur
         sendButton.addEventListener('click', sendMessage);
         userInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
